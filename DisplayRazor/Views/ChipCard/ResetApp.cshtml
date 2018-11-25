@@ -1,0 +1,25 @@
+﻿@model DisplayRazor.Models.ResetModel
+@{
+    ViewData["Title"] = "Rest";
+}
+<h2>@ViewData["Title"]</h2>
+@if (!string.IsNullOrEmpty(ViewData["Message"] as string)){
+    <h3>@ViewData["Message"]</h3>
+}
+
+
+<p>The reset button allows to delete the cached chipcards and retrieves them from the service provider.</p>
+<p>This Option should be used if the server is initalised or if new data is needed. The operation may take some time or and it might fail, if the maximum number of tries is exceedet.</p>
+<p>The operation cann't be rolled back!</p>
+<p>If a negative number is entered the default settiengs for the tries are used.</p>
+
+@using(Html.BeginForm("ResetApp", "ChipCard",FormMethod.Post)){
+    <div>
+        @Html.LabelFor(m => m.Tries)<br />
+        @Html.TextBoxFor(m=>m.Tries)<br />
+        @Html.ValidationMessageFor(m=>m.Tries)
+    </div>
+    <div>
+        <input type="submit"  value="Reset"/>
+    </div>
+}

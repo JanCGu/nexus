@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Dokumentation";
+}
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h2>Architectural Overview</h2>
+    <img src="~/images/Overview.png" width="30%">
+    <p>
+        The general architecture follows an onion design as it is common within domain driven desgin (DDD). In Addition to the onion layout a plugin infastructure is followed, where the outer service layers "plugin into" the inner ones and are replacable, as they only fullfill their infastructual demands. In addition the SOLID principles are followed for the implementation and can even be seen in the UML Diagramm.
+    </p>
+    <p>
+        The domain which only contains of the ChipCard entity is in the middle. Depending from the customer needs in the future this domain might grow. The Config and Core are basicly Service layers but due to dependencies they are seperated in two projects. At the outside the DisplayRazor as an MVC project can be found. This project allows the user to controll the application in a server-client-manner. The retrivers itention is to get the information from the Source and then it is stored through the Storage on the local harddrive.
+    </p>
+    <p>The storage project exists in order to persist the data from the retriver. This decision was made in order to circumwent the not responding and slow part, with the downside of a server side copy of the retriver and the need to resett if new data is needed.</p>
+    <p>An advantage of this architecture is the ease of change and the high grade of decoubleing of its compontents. Due to this decoupling the swapping of infastrucutre components or even adding new ones is quite simple.</p>
+    <p>The downside is that implementing of a new domain entity is more time demanding as in a simpler approach. A simpler aproach could have been to just have a MVC and put everything including the Retriver in the Controller. Unfortunatly the complexity of a programm is a invariant and is only depending on the functional or non functional demands. Therefore you can either have a fast start with a slowdown with each added component or a slow start with a steady speed as future changes are easaly handable.</p>
+</div>
+
+<div>
+    <h2>Architectural Details</h2>
+    <img src="~/images/Full.png" width="80%"/>
+
+</div>
+<div>
+    <h2>Areas of improvement depending on customer and future project needs</h2>
+    <ul>
+        <li>At the moment the storage is just a simple dump to the file System. This might be replaced through an database if the need to sync and manage multible sources at the same time arises</li>
+        <li>An authentification might be added to allow only allowed users to access the data and to trigger a delite. In this case Credientials and Credential Services will be needed in the Domain and Core in addition to a Right Managment System.</li>
+        <li>At the moment the web interface is realised "old school" like through a MVC and razors if the client requests a modern feeling single page application (SPA) the DisplayRazor can be replaced through an DisplaySPA, which achives this through angular or react. In the beginning the DisplayRazor can be used side by side to the new SPA in order to smoth out transitions.</li>
+        <li>The storage implementation deletes the whole storage at the moment. This might not be desirable as old chipcards which are not provided anymore are lost. This can be changed. In this case it would be wise to implement a IChipCardUpdater alongside the existing IChipCardResetter</li>
+        <li>If a microarchitecture is desired the whole infastruce points can be sepreated through a REST Inface.</li>
+        <li>A dedicated Rest Inface can be easliy added.</li>
+        <li>The resett process can be written asyncrhonus to refresh the local copy in periodic intervalls. In that case it would be wise to store it in a Temp_Intermediate.bin and only if the process finished to replace the exisitng one. Alternativly the improvement regarding a insert using update and create would also be feasiable.</li>
+        <li>For better usablity the Settings file might be made adible by a user. This should be realised through adding a SettingsController in the MVC.</li>
+        <li>CodedUI tests for testing the GUI should be added in order to streamline and get rid of the manual testing. This would also improve consistency and would at leas indirectly define expected design and behaviour.</li>
+    </ul>
+    <h2>Areas of architectual implementation improvement</h2>
+    <p>Unfortuniatly time is a limited resource and therefore there are allways some shortcomings.</p>
+    <ul>
+        <li>A better implementation would be if Config starts DisplayRazor and not the other way around. In this case DisplayRazor would be implemented as a DLL and to a degree it would even be replacable douring runtime as it is the case for the other infastructure services. With further work it can even be written to be fully replacable douring runtime. If such a behaviour would be wanted it would be wise to think about at at least thrice, because erros and behaviour quirks which would be testable and which would show up at compile time are now runtime erros and therefore they can easily impact the user experience.</li>
+        <li>The ChipCardController is not a strict implementation of SOLID. It does only one thing in regard to the ChipCard. In this point it can be considered to fullfill the single responsibilty, but it implements two comply diffrent interfaces displaying that it actually does two completly diffrent things. Therefore it should be seperated in a ChipCardGetterController and a ChipCardResetterController.</li>
+    </ul>
+
+</div>

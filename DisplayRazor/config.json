@@ -1,0 +1,6 @@
+﻿{
+  "NetWorkRetrievTries": 5,
+  "StorageLocation": "Temp.bin",
+  "ChipCardGetUrl": "http://carddesk.westeurope.cloudapp.azure.com:8901/DEMOService/Dataset",
+  "Timeouts": 5.0
+}

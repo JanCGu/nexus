@@ -1,0 +1,92 @@
+﻿@model IEnumerable<DisplayRazor.Models.ChipCardModel>
+@{
+    ViewData["Title"] = "Display";
+}
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrWhiteSpace(ViewData["Message"] as string)) {
+    < h3 > @ViewData["Message"] </ h3 >
+}
+
+
+@using (Html.BeginForm(FormMethod.Post)) {
+    <table class="table-condensed">
+        <tr>
+            <td class="text-center">
+                Active:
+            </td>
+            <td class="text-center">
+                Valid from (including):
+            </td>
+            <td class="text-center">
+                Valid to (including):
+            </td>
+            <td class="text-center">
+                @Html.LabelFor(m => m.First().ChipUId) like:
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center">
+                @{
+                    try {
+                        @Html.CheckBox("Active", (bool)ViewData["ValidTo"])
+                    }
+                    catch {
+                        @Html.CheckBox("Active")
+                    }
+                }
+
+            </td>
+            <td class="text-center">
+                @Html.TextBox("ValidFrom", String.Format("{0:d}",ViewData["ValidFrom"] as string ?? ""),
+               new { @class = "datefield", type = "date"  })
+            </td>
+            <td class="text-center">
+                @Html.TextBox("ValidTo", String.Format("{0:d}", ViewData["ValidTo"] as string ?? ""),
+                new { @class = "datefield", type = "date"  })
+            </td>
+            <td class="text-center">
+                @Html.TextBox("IdLike",ViewData["IdLike"])
+            </td>
+        </tr>
+
+    </table>
+    <div>
+        <input type="submit" value="Filter" />
+    </div>
+}
+<script type="text/javascript">
+    var checkbox = document.getElementById("Active");
+    checkbox.indeterminate = true;
+</script>
+<p>
+    @using (Html.BeginForm("Display", "ChipCard", FormMethod.Get)) {
+        <div>
+            <input type="submit" value="Get All" />
+        </div>
+    }
+</p>
+
+@if (Model.Any()) {
+    <table class="table">
+        <thead>
+            <tr>
+                <td>@Html.LabelFor(m => m.First().ChipUId)</td>
+                <td>@Html.LabelFor(m => m.First().ValidFrom)</td>
+                <td>@Html.LabelFor(m => m.First().ValidTo)</td>
+                <td>@Html.LabelFor(m => m.First().Active)</td>
+            </tr>
+        </thead>
+        @foreach (var card in Model) {
+            <tr>
+                <td>@card.ChipUId</td>
+                <td>@card.ValidFrom</td>
+                <td>@card.ValidTo</td>
+                <td>@card.Active</td>
+            </tr>
+        }
+    </table>
+}
+else {
+    <h3>No chipcards to display!</h3>
+}
